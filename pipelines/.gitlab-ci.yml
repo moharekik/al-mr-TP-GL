@@ -1,5 +1,6 @@
 stages:
   - default
+  - install_dep
   - dependencies
   - vulnerabilities
   - build
@@ -38,15 +39,18 @@ dependencies:
   script :
     - echo "Identification des dépendances obsolètes"
     - pnpm outdated --format json > reports/outdated-dependencies.json
+
+install_dep:
+  stage : install_dep
+  script:
     - echo "Installation des dépendances du projet"
     - pnpm install
-
 vulnerabilities:
   stage: vulnerabilities
   script:
     - echo "Identification des dépendances vulnérables"
     - pnpm audit --json  > reports/vulnerable-dependencies.json  
-    
+
 test_job:
   stage: test
   script:
