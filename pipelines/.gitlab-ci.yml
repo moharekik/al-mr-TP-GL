@@ -12,7 +12,8 @@ default:
     - corepack prepare pnpm@latest-8 --activate
     - pnpm config set store-dir .pnpm-store
   script:
-    - pnpm install # install dependencies
+    # - pnpm install # install dependencies
+    - echo "okkay"
   cache:
     key:
       files:
