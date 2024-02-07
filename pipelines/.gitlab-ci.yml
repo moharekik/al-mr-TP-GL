@@ -1,4 +1,5 @@
 stages:
+  - install_pnpm
   - default
   - install_dep
   - dependencies
@@ -7,6 +8,12 @@ stages:
   - test
   - deploy
 
+install_pnpm:
+  stage: install_pnpm
+  image: node:latest
+  script:
+    - npm install -g pnpm
+    
 default:
   stage: default
   image: node:latest
