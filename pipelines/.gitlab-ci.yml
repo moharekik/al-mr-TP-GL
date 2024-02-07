@@ -1,7 +1,7 @@
 stages:
   - default
-  - test
   - build
+  - test
   - deploy
 
 default:
@@ -30,7 +30,7 @@ test_job:
   stage: test
   script:
     - ./test.sh
-    
+
 deploy_job:
   stage: deploy
   script:
