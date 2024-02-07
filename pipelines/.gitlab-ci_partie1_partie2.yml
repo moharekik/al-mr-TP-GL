@@ -1,7 +1,0 @@
-stages:
-  - hello-stage
-
-hello-job:
-  stage: hello-stage
-  script:
-    - echo "Hello pipelines' world !"
