@@ -6,12 +6,12 @@ stages:
 build_job:
   stage: build
   script:
-    - echo "Building the project..."
-
+    # - echo "Building the project..."
+    - ./build.sh
 test_job:
   stage: test
   script:
-    - echo "Running tests..."
+    - ./test.sh
 
 deploy_job:
   stage: deploy
