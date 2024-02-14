@@ -1,6 +1,5 @@
 stages:
-  - install_pnpm
-  - default
+  # - install_pnpm
   - install_dep
   - dependencies
   - vulnerabilities
@@ -8,11 +7,11 @@ stages:
   - test
   - deploy
 
-install_pnpm:
-  stage: install_pnpm
-  image: node:18.17.1
-  script:
-    - npm install -g pnpm
+# install_pnpm:
+#   stage: install_pnpm
+#   image: node:18.17.1
+#   script:
+#     - npm install -g pnpm
     
 default:
   stage: default
@@ -28,6 +27,7 @@ default:
     key:
       files:
         - pnpm-lock.yaml
+        - node_modules
     paths:
       - .pnpm-store
     
