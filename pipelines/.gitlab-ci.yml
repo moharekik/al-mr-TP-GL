@@ -10,7 +10,7 @@ stages:
 
 install_pnpm:
   stage: install_pnpm
-  image: node:latest
+  image: node:18.17.1
   script:
     - npm install -g pnpm
     
