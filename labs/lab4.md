@@ -7,11 +7,13 @@ Approfondir l'utilisation des pipelines d'intégration et notamment les notions 
 - Variables et conditions
 
 > A la fin du TP penser à rebase afin d'avoir un historique clair.
+
 ## Pré-requis
 - Créer une nouvelle branche git `lab4`
 - Repartir du pipeline du lab précédent (du groupe ou issu de la correction)
 
 > Penser à bien tester chaque étape du Lab en exécutant le pipeline. N'oubliez pas de faire des commits sur votre branche avec un nom de message de commit explicite à chaque étape.
+
 ## 1. Mise en place d'un cache
 - Supprimer l'étape de récupération des dépendances, faire une installation systématique des dépendances (en utilisant `before_script`) et commencer le pipeline par le stage de build
 
@@ -19,6 +21,7 @@ Approfondir l'utilisation des pipelines d'intégration et notamment les notions 
 - Lancer une première fois l'exécution du pipeline avec le cache. Vérifier que l'étape de build télécharge les dépendances mais pas les stages suivants
 - Lancer une deuxième fois l'exécution du pipeline pour vérifier que toutes les dépendances ne sont pas retéléchargées, quelque soit le stage
 - Mettre à jour quelques dépendances, commit et push et vérifier que le cache n'est pas utilisé lorsque les dépendances ont changé
+
 ## 2. Stages et Jobs
 Réorganisez votre pipeline en 2 stages:
 - Build
@@ -26,14 +29,17 @@ Réorganisez votre pipeline en 2 stages:
 Le stage Build doit s'occuper de construire le package.
 Le stage Quality doit permettre de faire s'exécuter le type-checking, le linter et les tests.
 Par défaut les jobs à l'intérieur d'un stage s'exécutent en parallèle, modifier le pipeline pour que le linter s'exécute après le type-checking.
+
 ## 3. Variables et Conditions
 - Définir un [paramètre](https://docs.gitlab.com/ee/ci/variables/) de pipeline "Version" représentant la version du package au format [SemVer](https://semver.org/). Nommer le package généré par la build de la manière suivante : {nomduprojet}_{version}.
 - Modifier le pipeline pour ne lancer l'analyse statique que sur une exécution manuelle
 - Modifier le pipeline pour ne lancer les tests que si l'on se trouve sur la branche main
+
 ## 4. Triggers
 - Configurer le pipeline pour qu'il se [déclenche](https://crontab.guru/) tous les mardis matin à 8h (le tester d'abord avec l'heure actuelle pour vérifier qu'il se déclenche bien)
 - Ajouter un trigger sur le pipeline pour qu'elle soit déclenchée à chaque fois qu'un commit est fait sur une branche qui commencera par `feature/`
 - Ajouter un trigger sur le pipeline pour qu'il se délenche sur un merge request
+
 ## 5. Pour aller plus loin
 - Ajouter un job de détection des packages obsolètes (cf Lab 2 partie Pour aller plus loin)
     - Créer un artifact avec le rapport
