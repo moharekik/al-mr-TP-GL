@@ -14,7 +14,6 @@ stages:
 #     - npm install -g pnpm
     
 default:
-  stage: default
   image: node:latest
   before_script:
     - corepack enable
