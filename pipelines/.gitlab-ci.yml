@@ -1,18 +1,10 @@
 stages:
-  # - install_pnpm
   - install_dep
   - dependencies
   - vulnerabilities
   - build
   - test
   - deploy
-
-# install_pnpm:
-#   stage: install_pnpm
-#   image: node:18.17.1
-#   script:
-#     - npm install -g pnpm
-    
 default:
   image: node:latest
   before_script:
@@ -20,7 +12,7 @@ default:
     - corepack prepare pnpm@latest-8 --activate
     - pnpm config set store-dir .pnpm-store
   script:
-    # - pnpm install # install dependencies
+    - pnpm install
     - echo "okkay"
   cache:
     key:
