@@ -1,0 +1,53 @@
+stages:
+  - restore
+  - build
+  - static-typing
+  - lint
+  - test
+  - publish
+
+default:
+  image: node:latest
+  cache: &global_cache
+    key:
+      files:
+        - pnpm-lock.yaml
+    paths:
+      - .pnpm-store
+      - node_modules/
+    policy: pull
+  before_script:
+    - corepack enable
+    - corepack prepare pnpm@latest-8 --activate
+    - pnpm config set store-dir .pnpm-store
+
+restore-job:
+  stage: restore
+  cache:
+    <<: *global_cache
+    policy: pull-push
+  script:
+    - pnpm install
+
+static-typing-job:
+  stage: static-typing
+  script:
+    - pnpm type-check
+
+lint-job:
+  stage: lint
+  script:
+    - pnpm lint
+
+build-job:
+  stage: build
+  script:
+    - pnpm build
+  artifacts:
+    paths:
+      - dist/
+
+test-job:
+  stage: test
+  script:
+    - pnpm test

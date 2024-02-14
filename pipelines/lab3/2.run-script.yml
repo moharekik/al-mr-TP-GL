@@ -1,0 +1,14 @@
+stages:
+  - hello-stage
+
+default:
+  image: node:latest
+  before_script:
+    - corepack enable
+    - corepack prepare pnpm@latest-8 --activate
+    - pnpm config set store-dir .pnpm-store
+
+hello-job:
+  stage: hello-stage
+  script:
+    - ./pipelines/lab2.sh

@@ -4,5 +4,7 @@ export default antfu({
   ignores: [
     'dist',
     'public',
+    '.pnpm-store',
   ],
+  yaml: false,
 })
