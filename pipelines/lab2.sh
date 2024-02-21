@@ -20,6 +20,7 @@ pnpm vite build
 echo "Analyse statique"
 pnpm eslint .
 
+
 # echo "Lancement du package créé" 
 # pnpm vite preview
 
