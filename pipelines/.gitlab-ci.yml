@@ -1,3 +1,9 @@
+workflow:
+  rules:
+  - if: '$CI_COMMIT_REF_NAME =~ /^feature\//' 
+  - if: $CI_PIPELINE_SOURCE == "merge_request_event" 
+  - if: $CI_PIPELINE_SOURCE == "api" 
+
 stages:
   - build
   - static-typing
@@ -28,6 +34,7 @@ static-typing-job:
   script:
     - pnpm type-check
   when: manual # permet de faire ce stage manuellement
+
 
 lint-job:
   stage: lint
