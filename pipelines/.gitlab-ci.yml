@@ -13,25 +13,12 @@ default:
         - pnpm-lock.yaml
     paths:
       - .pnpm-store
-      - node_modules/
     policy: pull
-
-before_script:
-  - corepack enable
-  - corepack prepare pnpm@latest-8 --activate
-  - pnpm config set store-dir .pnpm-store
-  - pnpm install
-
-build-job:
-  stage: build
-  script:
-    - pnpm build
-  cache:
-    <<: *global_cache
-    policy: pull-push
-  artifacts:
-    paths:
-      - dist/
+  before_script:
+    - corepack enable
+    - corepack prepare pnpm@latest-8 --activate
+    - pnpm config set store-dir .pnpm-store
+    - pnpm install
 
 static-typing-job:
   stage: static-typing
@@ -42,6 +29,17 @@ lint-job:
   stage: lint
   script:
     - pnpm lint
+
+build-job:
+  stage: build
+  cache:
+    <<: *global_cache
+    policy: pull-push
+  script:
+    - pnpm build
+  artifacts:
+    paths:
+      - dist/
 
 test-job:
   stage: test
