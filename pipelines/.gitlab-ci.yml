@@ -5,6 +5,9 @@ stages:
   - test
   - publish
 
+variables:
+  VERSION : "0.0.0"
+
 default:
   image: node:latest
   cache: &global_cache
@@ -24,6 +27,7 @@ static-typing-job:
   stage: static-typing
   script:
     - pnpm type-check
+  when: manual # permet de faire ce stage manuellement
 
 lint-job:
   stage: lint
@@ -36,10 +40,11 @@ build-job:
     <<: *global_cache
     policy: pull-push
   script:
-    - pnpm build
+    - pnpm build 
   artifacts:
+    name: $(VERSION)
     paths:
-      - dist/
+      - /dist
 
 test-job:
   stage: test
