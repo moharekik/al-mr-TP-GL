@@ -11,7 +11,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "vitest",
-    "test-report": "jest --ci --reporters=jest-junit"
+    "test-report": "vitest --reporter junit --outputFile test-resutls.xml"
   },
   "dependencies": {
     "@formkit/auto-animate": "^1.0.0-beta.1",
@@ -38,14 +38,6 @@
     "vite": "^5.0.11",
     "vitest": "^1.2.0",
     "vue-tsc": "^1.8.27"
-  },
-  "jest": {
-    "reporters": [
-      "default",
-      ["jest-junit", {
-        "outputDirectory": "./test-reports",
-        "outputName": "junit.xml"
-      }]
-    ]
   }
+
 }

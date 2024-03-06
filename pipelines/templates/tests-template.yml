@@ -1,8 +1,9 @@
 test:
   script:
-    - pnpm test
-    # Exécuter le script de rapport de test
-    - npm run test-report
+    - pnpm test-report
   artifacts:
+    when : always
+    paths:
+      - test-results.xml
     reports:
-      junit: test-report.xml
+      junit: test-results.xml
