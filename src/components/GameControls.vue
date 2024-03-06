@@ -9,7 +9,7 @@ const game = useGameStore()
 <template>
   <div flex max-w="600px" w-full mx-auto>
     <div text-left self-end>
-      <div lt-md:text-7xl text-8xl font-black font-mono text-light-800 leading-18>
+      <div class="lt-md:text-7xl text-8xl font-black font-mono text-light-800 leading-18">
         {{ score.toFixed(0) }}
       </div>
       <div text-3xl font-mono op50>

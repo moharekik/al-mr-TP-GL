@@ -1,0 +1,56 @@
+variables:
+  Version:
+    description: "Choose the version to give to the application."
+
+stages:
+  - build
+  - quality
+
+default:
+  image: node:latest
+  cache: &global_cache
+    key:
+      files:
+        - pnpm-lock.yaml
+    paths:
+      - .pnpm-store
+    policy: pull
+  before_script:
+    - corepack enable
+    - corepack prepare pnpm@latest-8 --activate
+    - pnpm config set store-dir .pnpm-store
+    - pnpm install
+
+build-package:
+  stage: build
+  cache:
+    <<: *global_cache
+    policy: pull-push
+  script:
+    - pnpm build
+  artifacts:
+    name: "$CI_PROJECT_TITLE-$Version"
+    paths:
+      - dist/
+
+
+static-typing:
+  stage: quality
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "web"
+  script:
+    - pnpm type-check
+
+lint:
+  stage: quality
+  needs:
+    - static-typing
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "main"
+  script:
+    - pnpm lint
+
+test:
+  stage: quality
+  script:
+    - pnpm test

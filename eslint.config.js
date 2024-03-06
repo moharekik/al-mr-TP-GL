@@ -7,4 +7,5 @@ export default antfu({
     '.pnpm-store',
   ],
   yaml: false,
+  markdown: false,
 })
