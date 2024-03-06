@@ -1,11 +1,11 @@
 include:
   - /pipelines/templates/quality-template.yml
 
-workflow:
-  rules:
-  - if: '$CI_COMMIT_REF_NAME =~ /^feature\//' 
-  - if: $CI_PIPELINE_SOURCE == "merge_request_event" 
-  - if: $CI_PIPELINE_SOURCE == "api" 
+# workflow:
+#   rules:
+#   - if: '$CI_COMMIT_REF_NAME =~ /^feature\//' 
+#   - if: $CI_PIPELINE_SOURCE == "merge_request_event" 
+#   - if: $CI_PIPELINE_SOURCE == "api" 
 
 stages:
   - build
