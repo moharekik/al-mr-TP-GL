@@ -1,3 +1,6 @@
+include:
+  - /pipelines/templates/quality-template.yml
+
 workflow:
   rules:
   - if: '$CI_COMMIT_REF_NAME =~ /^feature\//' 
@@ -58,11 +61,11 @@ test-job:
   script:
     - pnpm test
 
-tests:
-  runs-on: ubuntu-latest
-  steps:
-    # - name: Checkout code
-    #   uses: actions/checkout@v2
-    # Exécute additional.yml dans le stage 'build'
-    - name: Execute templates/tests-template.yml
-      uses: ./templates/tests-template.yml
+# tests:
+#   runs-on: ubuntu-latest
+#   steps:
+#     # - name: Checkout code
+#     #   uses: actions/checkout@v2
+#     # Exécute additional.yml dans le stage 'build'
+#     - name: Execute templates/tests-template.yml
+#       uses: ./templates/tests-template.yml
