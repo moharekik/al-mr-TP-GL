@@ -1,0 +1,45 @@
+stages:
+  - build
+  - qa
+  - production
+
+default:
+  image: node:latest
+  cache: &global_cache
+    key:
+      files:
+        - pnpm-lock.yaml
+    paths:
+      - .pnpm-store
+    policy: pull
+  before_script:
+    - corepack enable
+    - corepack prepare pnpm@latest-8 --activate
+    - pnpm config set store-dir .pnpm-store
+
+include:
+  - /pipelines/lab8/deploy-template.yml
+
+build:
+  stage: build
+  cache:
+    <<: *global_cache
+    policy: pull-push
+  script:
+    - pnpm install
+    - pnpm build
+  artifacts:
+    paths:
+      - dist/
+
+deploy-qa:
+  stage: qa
+  environment:
+    name: QA
+  extends: .deploy
+
+deploy-production:
+  stage: production
+  environment:
+    name: Prod
+  extends: .deploy
