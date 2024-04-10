@@ -1,11 +1,82 @@
+# include:
+#   - /pipelines/templates/quality-template.yml
+
+# # workflow:
+# #   rules:
+# #   - if: '$CI_COMMIT_REF_NAME =~ /^feature\//' 
+# #   - if: $CI_PIPELINE_SOURCE == "merge_request_event" 
+# #   - if: $CI_PIPELINE_SOURCE == "api" 
+
+# stages:
+#   - build
+#   - static-typing
+#   - lint
+#   - test
+#   - publish
+
+# variables:
+#   VERSION : "0.0.0"
+
+# default:
+#   image: node:latest
+#   cache: &global_cache
+#     key:
+#       files:
+#         - pnpm-lock.yaml
+#     paths:
+#       - .pnpm-store
+#     policy: pull
+#   before_script:
+#     - corepack enable
+#     - corepack prepare pnpm@latest-8 --activate
+#     - pnpm config set store-dir .pnpm-store
+#     - pnpm install
+
+# static-typing-job:
+#   stage: static-typing
+#   script:
+#     - pnpm type-check
+#   when: manual # permet de faire ce stage manuellement
+
+
+# lint-job:
+#   stage: lint
+#   script:
+#     - pnpm lint
+
+# build-job:
+#   stage: build
+#   cache:
+#     <<: *global_cache
+#     policy: pull-push
+#   script:
+#     - pnpm build 
+#   artifacts:
+#     name: $(VERSION)
+#     paths:
+#       - /dist
+
+# test-job:
+#   stage: test
+#   script:
+#     - pnpm test
+
+# # tests:
+# #   runs-on: ubuntu-latest
+# #   steps:
+# #     # - name: Checkout code
+# #     #   uses: actions/checkout@v2
+# #     # Exécute additional.yml dans le stage 'build'
+# #     - name: Execute templates/tests-template.yml
+# #       uses: ./templates/tests-template.yml
+# # deploy-prod:
+# #   extends : .deploy
+# #   rules :
+# #     - if: $CI_PIPELINE_SOURCE = "web"
+# #   script:
+# #     - pnpm dls vercel deploy --prod --cwd dist/ --token $VERCEL_TOKEN
 include:
   - /pipelines/templates/quality-template.yml
-
-# workflow:
-#   rules:
-#   - if: '$CI_COMMIT_REF_NAME =~ /^feature\//' 
-#   - if: $CI_PIPELINE_SOURCE == "merge_request_event" 
-#   - if: $CI_PIPELINE_SOURCE == "api" 
 
 stages:
   - build
@@ -13,9 +84,12 @@ stages:
   - lint
   - test
   - publish
+  - deploy_qa
+  - deploy_prod
 
 variables:
-  VERSION : "0.0.0"
+  VERSION: "0.0.0"
+  SWA_CLI_AUTH: $SWA_CLI_AUTH  # Utiliser une variable d'environnement pour stocker l'authentification SWA CLI
 
 default:
   image: node:latest
@@ -36,8 +110,7 @@ static-typing-job:
   stage: static-typing
   script:
     - pnpm type-check
-  when: manual # permet de faire ce stage manuellement
-
+  when: manual
 
 lint-job:
   stage: lint
@@ -61,17 +134,16 @@ test-job:
   script:
     - pnpm test
 
-# tests:
-#   runs-on: ubuntu-latest
-#   steps:
-#     # - name: Checkout code
-#     #   uses: actions/checkout@v2
-#     # Exécute additional.yml dans le stage 'build'
-#     - name: Execute templates/tests-template.yml
-#       uses: ./templates/tests-template.yml
-# deploy-prod:
-#   extends : .deploy
-#   rules :
-#     - if: $CI_PIPELINE_SOURCE = "web"
-#   script:
-#     - pnpm dls vercel deploy --prod --cwd dist/ --token $VERCEL_TOKEN
+deploy_qa:
+  stage: deploy_qa
+  script:
+    - pnpm run swa deploy --environment qa --auth $SWA_CLI_AUTH
+  dependencies:
+    - build-job
+
+deploy_prod:
+  stage: deploy_prod
+  script:
+    - pnpm run swa deploy --environment prod --auth $SWA_CLI_AUTH
+  dependencies:
+    - build-job
