@@ -1,3 +1,4 @@
+
 ## Partie Pour aller plus loin ##
 echo "Identification des dépendances obsolètes"
 pnpm outdated --format json > reports/outdated-dependencies.json
@@ -19,10 +20,3 @@ pnpm vite build
 
 echo "Analyse statique"
 pnpm eslint .
-
-
-# echo "Lancement du package créé" 
-# pnpm vite preview
-
-echo "Execution des tests"
-pnpm vitest run

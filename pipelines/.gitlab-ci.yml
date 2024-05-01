@@ -1,28 +1,43 @@
+include:
+  - /pipelines/templates/quality-template.yml
+
+# workflow:
+#   rules:
+#   - if: '$CI_COMMIT_REF_NAME =~ /^feature\//' 
+#   - if: $CI_PIPELINE_SOURCE == "merge_request_event" 
+#   - if: $CI_PIPELINE_SOURCE == "api" 
+
 stages:
-  - restore
+  - build
   - static-typing
   - lint
-  - build
   - test
   - publish
 
+variables:
+  VERSION : "0.0.0"
+
 default:
   image: node:latest
+  cache: &global_cache
+    key:
+      files:
+        - pnpm-lock.yaml
+    paths:
+      - .pnpm-store
+    policy: pull
   before_script:
     - corepack enable
     - corepack prepare pnpm@latest-8 --activate
     - pnpm config set store-dir .pnpm-store
     - pnpm install
 
-restore-job:
-  stage: restore
-  script:
-    - pnpm install
-
 static-typing-job:
   stage: static-typing
   script:
     - pnpm type-check
+  when: manual # permet de faire ce stage manuellement
+
 
 lint-job:
   stage: lint
@@ -31,13 +46,32 @@ lint-job:
 
 build-job:
   stage: build
+  cache:
+    <<: *global_cache
+    policy: pull-push
   script:
-    - pnpm build
+    - pnpm build 
   artifacts:
+    name: $(VERSION)
     paths:
-      - dist/
+      - /dist
 
 test-job:
   stage: test
   script:
     - pnpm test
+
+# tests:
+#   runs-on: ubuntu-latest
+#   steps:
+#     # - name: Checkout code
+#     #   uses: actions/checkout@v2
+#     # Exécute additional.yml dans le stage 'build'
+#     - name: Execute templates/tests-template.yml
+#       uses: ./templates/tests-template.yml
+# deploy-prod:
+#   extends : .deploy
+#   rules :
+#     - if: $CI_PIPELINE_SOURCE = "web"
+#   script:
+#     - pnpm dls vercel deploy --prod --cwd dist/ --token $VERCEL_TOKEN

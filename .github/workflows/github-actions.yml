@@ -1,0 +1,83 @@
+name: my workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Check pnpm
+        uses: pnpm/action-setup@v3
+        with:
+           version: 8
+
+      - name: Build application
+        run: | 
+          pnpm install
+          pnpm build
+
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: |
+            dist
+      - name: Tests
+        run: | 
+          pnpm type-check
+          pnpm lint
+          pnpm test
+
+
+      # - name: Run static analysis and unit tests
+      #   run: 
+      #     # Commandes pour exécuter les analyses statiques (linter, typage statique)
+      #     # Exemple: pylint src/ && pytest tests/
+
+  deploy:
+    name: Deploy to QA and PROD
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Check pnpm
+        uses: pnpm/action-setup@v3
+        with:
+           version: 8
+      
+      - name: Build application
+        run: | 
+          pnpm install
+          pnpm build
+
+      - name: Install SWA
+        run: pnpm install @azure/static-web-apps-cli
+
+      - name: Deploy to QA
+        env: 
+          TOKEN_AZURE_QA: ${{ secrets.TOKEN_AZURE_QA }}
+        run: |
+          pnpm swa deploy ./dist --app-name stapp-vue2048-qa -d $TOKEN_AZURE_QA
+
+      - name: Deploy to PROD
+        env:
+          TOKEN_AZURE_PROD: ${{ secrets.TOKEN_AZURE_PROD }}
+        run: |
+          pnpm swa deploy ./dist --app-name stapp-vue2048-prod -d  $TOKEN_AZURE_PROD
+          
