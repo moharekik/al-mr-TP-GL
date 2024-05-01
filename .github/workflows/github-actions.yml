@@ -39,13 +39,7 @@ jobs:
           pnpm type-check
           pnpm lint
           pnpm test
-
-
-      # - name: Run static analysis and unit tests
-      #   run: 
-      #     # Commandes pour exécuter les analyses statiques (linter, typage statique)
-      #     # Exemple: pylint src/ && pytest tests/
-
+          
   deploy:
     name: Deploy to QA and PROD
     needs: build
