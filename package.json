@@ -11,7 +11,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "vitest",
-    "test-report": "vitest --reporter junit --outputFile ./report.xml"
+    "test-report": "vitest --reporter junit --outputFile ./report.xml",
+    "swa": "swa"
   },
   "dependencies": {
     "@formkit/auto-animate": "^1.0.0-beta.1",
