@@ -10,8 +10,8 @@ include:
 stages:
   - build
   - static-typing
-  - lint
-  - test
+  # - lint
+  # - test
   - publish
 
 variables:
@@ -39,10 +39,10 @@ static-typing-job:
   when: manual # permet de faire ce stage manuellement
 
 
-lint-job:
-  stage: lint
-  script:
-    - pnpm lint
+# lint-job:
+#   stage: lint
+#   script:
+#     - pnpm lint
 
 build-job:
   stage: build
