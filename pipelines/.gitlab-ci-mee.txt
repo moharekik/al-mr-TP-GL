@@ -1,0 +1,61 @@
+stages:
+  - install_dep
+  - dependencies
+  - vulnerabilities
+  - build
+  - test
+  - deploy
+default:
+  image: node:latest
+  before_script:
+    - corepack enable
+    - corepack prepare pnpm@latest-8 --activate
+    - pnpm config set store-dir .pnpm-store
+  script:
+    - pnpm install
+    - echo "okkay"
+  cache:
+    key:
+      files:
+        - pnpm-lock.yaml
+        - node_modules
+    paths:
+      - .pnpm-store
+    
+build_job:
+  stage: build
+  script:
+    - echo "Building the project..." 
+    - echo "Type checking" 
+    - pnpm vue-tsc --noEmit
+    - echo "Installation des dépendances du projet"
+    - pnpm vite build
+    - echo "Analyse statique"
+    - pnpm eslint .
+dependencies:
+  stage : dependencies
+  script :
+    - echo "Identification des dépendances obsolètes"
+    - pnpm outdated --format json > reports/outdated-dependencies.json
+
+install_dep:
+  stage : install_dep
+  script:
+    - echo "Installation des dépendances du projet"
+    - pnpm install
+vulnerabilities:
+  stage: vulnerabilities
+  script:
+    - echo "Identification des dépendances vulnérables"
+    - pnpm audit --json  > reports/vulnerable-dependencies.json  
+
+test_job:
+  stage: test
+  script:
+    - echo "Execution des tests"
+    - pnpm vitest run
+
+deploy_job:
+  stage: deploy
+  script:
+    - echo "Deploying the project..."
