@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="2" failures="0" errors="0" time="0.781">
+    <testsuite name="tests/hello-world.spec.ts" timestamp="2024-03-06T16:57:19.659Z" hostname="lagraoui-Inspiron-5502" tests="1" failures="0" errors="0" skipped="0" time="0.002">
+        <testcase classname="tests/hello-world.spec.ts" name="Hello world &gt; should be ok" time="0.002">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/__tests__/Tile.spec.ts" timestamp="2024-03-06T16:57:19.661Z" hostname="lagraoui-Inspiron-5502" tests="1" failures="0" errors="0" skipped="0" time="0.019">
+        <testcase classname="src/components/__tests__/Tile.spec.ts" name="tile tests &gt; should div background color be orange when value is 2" time="0.017">
+        </testcase>
+    </testsuite>
+</testsuites>
