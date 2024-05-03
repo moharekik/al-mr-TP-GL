@@ -1,4 +1,4 @@
-name: my workflow
+name: Build and Deploy
 
 on:
   push:
@@ -15,31 +15,31 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Check pnpm
+      - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
-           version: 8
+          version: 8
 
-      - name: Build application
-        run: | 
+      - name: Build Application
+        run: |
           pnpm install
           pnpm build
 
-      - name: Archive production artifacts
+      - name: Archive Production Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: dist
-          path: |
-            dist
-      - name: Tests
-        run: | 
+          path: dist
+
+      - name: Run Tests
+        run: |
           pnpm type-check
           pnpm lint
           pnpm test
-          
+
   deploy:
     name: Deploy to QA and PROD
     needs: build
@@ -47,20 +47,20 @@ jobs:
     if: github.event_name == 'workflow_dispatch'
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Check pnpm
+      - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
-           version: 8
+          version: 8
       
-      - name: Build application
-        run: | 
+      - name: Build Application
+        run: |
           pnpm install
           pnpm build
 
-      - name: Install SWA
+      - name: Install Static Web Apps CLI
         run: pnpm install @azure/static-web-apps-cli
 
       - name: Deploy to QA
@@ -73,5 +73,4 @@ jobs:
         env:
           TOKEN_AZURE_PROD: ${{ secrets.TOKEN_AZURE_PROD }}
         run: |
-          pnpm swa deploy ./dist --app-name stapp-vue2048-prod -d  $TOKEN_AZURE_PROD
-          
+          pnpm swa deploy ./dist --app-name stapp-vue2048-prod -d $TOKEN_AZURE_PROD
